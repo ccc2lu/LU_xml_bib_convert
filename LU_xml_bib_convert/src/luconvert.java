@@ -16,8 +16,8 @@ import org.marc4j.converter.impl.AnselToUnicode;
 import org.marc4j.marc.Record;
 
 /**
- * Writes MARc XML to standard output
- * 
+ * Reads in MARC from a file named by the first argument, writes out
+ * MarcXML to the file given by the second argument.
  */
 public class luconvert {
 
@@ -31,8 +31,8 @@ public class luconvert {
     	FileOutputStream output = new FileOutputStream(outputFile);
     	//PrintStream outputprintstream = new PrintStream(output);
     	
-        MarcReader reader = new MarcStreamReader(input);
-        MarcWriter writer = new MarcXmlWriter(output, "UTF-8", true);
+        MarcReader reader = new MarcStreamReader(input, "UTF-8");
+        MarcXmlWriter writer = new MarcXmlWriter(output, "UTF-8", true);
 
         //ByteArrayOutputStream tempout;
         //String marcXML;
@@ -44,7 +44,7 @@ public class luconvert {
         // but it turns out it is only applied to the data between the tags, 
         // not the tags themselves.  
         
-        // I the tried writing all the MarcXML to a ByteArrayOutputStream one
+        // I then tried writing all the MarcXML to a ByteArrayOutputStream one
         // record at a time, and then applying my converter to that, but that
         // re-generated the xml version tag over and over again and put each
         // record in its own collection tag.  So, instead I just wrote
@@ -57,7 +57,8 @@ public class luconvert {
         
         AnselToUnicode converter = new AnselToUnicode();
         writer.setConverter(converter);
-        
+        writer.setUnicodeNormalization(true);
+
         //int limit = -1; // All records
         int limit = 50000;
         int curr = 0;
