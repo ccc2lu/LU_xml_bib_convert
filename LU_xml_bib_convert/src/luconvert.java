@@ -59,8 +59,11 @@ public class luconvert {
         writer.setConverter(converter);
         writer.setUnicodeNormalization(true);
 
-        //int limit = -1; // All records
-        int limit = 50000;
+        int limit = -1; // No limit, convert all records
+        if ( args.length == 3 ) {
+        	limit = Integer.parseInt(args[2]);
+        	System.out.println("Converting only " + limit + " records");
+        }
         int curr = 0;
         int showprogress = 1000;
         while (reader.hasNext() && (limit <= 0 || curr < limit)) {
