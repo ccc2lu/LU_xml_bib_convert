@@ -8,12 +8,18 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
 
+import javax.xml.transform.Result;
+import javax.xml.transform.sax.SAXResult;
+
 import org.marc4j.MarcReader;
 import org.marc4j.MarcStreamReader;
 import org.marc4j.MarcWriter;
 import org.marc4j.MarcXmlWriter;
 import org.marc4j.converter.impl.AnselToUnicode;
 import org.marc4j.marc.Record;
+
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 
 /**
  * Reads in MARC from a file named by the first argument, writes out
@@ -31,9 +37,15 @@ public class luconvert {
     	FileOutputStream output = new FileOutputStream(outputFile);
     	//PrintStream outputprintstream = new PrintStream(output);
     	
-        MarcReader reader = new MarcStreamReader(input, "UTF-8");
-        MarcXmlWriter writer = new MarcXmlWriter(output, "UTF-8", true);
+        MarcReader reader = new MarcStreamReader(input, "ISO-8859-1");
+        
+        //OutputFormat format = new OutputFormat("text", "UTF-8", true);
+        //XMLSerializer serializer = new XMLSerializer(output, format);
+        //Result result = new SAXResult(serializer.asContentHandler());
+        //MarcXmlWriter writer = new MarcXmlWriter(result);
 
+        MarcXmlWriter writer = new MarcXmlWriter(output, "ISO-8859-1", true);
+        
         //ByteArrayOutputStream tempout;
         //String marcXML;
         
@@ -56,8 +68,9 @@ public class luconvert {
         //lu_char_converter lu_converter = new lu_char_converter();
         
         AnselToUnicode converter = new AnselToUnicode();
+        //converter.setTranslateNCR(false);
         writer.setConverter(converter);
-        writer.setUnicodeNormalization(true);
+        writer.setUnicodeNormalization(false);
 
         int limit = -1; // No limit, convert all records
         if ( args.length == 3 ) {
