@@ -16,6 +16,7 @@ import org.marc4j.MarcStreamReader;
 import org.marc4j.MarcWriter;
 import org.marc4j.MarcXmlWriter;
 import org.marc4j.converter.impl.AnselToUnicode;
+import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
 
 import org.apache.xml.serialize.OutputFormat;
@@ -79,10 +80,21 @@ public class luconvert {
         }
         int curr = 0;
         int showprogress = 1000;
+        MarcFactory fact = MarcFactory.newInstance();
+        int controlnumber = 0;
+        String formattednumber = "";
         while (reader.hasNext() && (limit <= 0 || curr < limit)) {
             Record record = reader.next();
             //tempout = new ByteArrayOutputStream();
             //writer = new MarcXmlWriter(tempout, "UTF-8");
+
+            // We strip the starting "a" off the 001 field, then pad it to 11 characters long
+            // with leading zeros
+            controlnumber = Integer.parseInt(record.getControlNumber().substring(1));
+            formattednumber = String.format("%011d", controlnumber);
+            record.addVariableField(fact.newControlField("001", formattednumber));
+
+            // How can we add fields to edit the 001?  I want to remove the "a" from it, maybe pad it to 11 characters total
             writer.write(record);
             //writer.close();
             //marcXML=tempout.toString("UTF-8");
