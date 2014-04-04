@@ -90,8 +90,15 @@ public class luconvert {
 
             // We strip the starting "a" off the 001 field, then pad it to 11 characters long
             // with leading zeros
-            controlnumber = Integer.parseInt(record.getControlNumber().substring(1));
-            formattednumber = String.format("%011d", controlnumber);
+            formattednumber = record.getControlNumber();
+            if ( formattednumber.substring(0, 1).equals("a") ) {
+                controlnumber = Integer.parseInt(formattednumber.substring(1));
+                //formattednumber = String.format("%011d", controlnumber);
+                formattednumber = Integer.toString(controlnumber);
+            } else {
+            	System.out.println("001 field without an \"a\" at the beginning: " + formattednumber);
+            }
+
             record.addVariableField(fact.newControlField("001", formattednumber));
 
             // How can we add fields to edit the 001?  I want to remove the "a" from it, maybe pad it to 11 characters total
