@@ -45,7 +45,7 @@ public class luconvert {
         //Result result = new SAXResult(serializer.asContentHandler());
         //MarcXmlWriter writer = new MarcXmlWriter(result);
 
-        MarcXmlWriter writer = new MarcXmlWriter(output, "ISO-8859-1", true);
+        MarcXmlWriter writer = new MarcXmlWriter(output, "UTF-8", true);
         
         //ByteArrayOutputStream tempout;
         //String marcXML;
@@ -71,7 +71,7 @@ public class luconvert {
         AnselToUnicode converter = new AnselToUnicode();
         //converter.setTranslateNCR(false);
         writer.setConverter(converter);
-        writer.setUnicodeNormalization(false);
+        writer.setUnicodeNormalization(true);
 
         int limit = -1; // No limit, convert all records
         if ( args.length == 3 ) {
